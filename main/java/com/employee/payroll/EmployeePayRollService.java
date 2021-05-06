@@ -1,5 +1,11 @@
 package com.employee.payroll;
 
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -28,7 +34,7 @@ public class EmployeePayRollService {
     /**
      * created a write employee data method to console
      */
-    private void writeEmployeeData() {
+    void writeEmployeeData() {
         System.out.println("Employee Data are :" + employeePayRollDataArrayList);
     }
 
@@ -43,5 +49,27 @@ public class EmployeePayRollService {
         Scanner inputFromConsole = new Scanner(System.in);
         employeePayRollService.readEmployeeData(inputFromConsole);
         employeePayRollService.writeEmployeeData();
+    }
+
+    public int writeEmployeeDetailTofFile() throws IOException {
+        int entries = 0;
+        Path employeePayRollDirectory = Paths.get("testDirectory");
+        File fileObj = employeePayRollDirectory.toFile();
+        File[] listOfFiles = fileObj.listFiles();
+        if(Files.isDirectory(employeePayRollDirectory)) {
+            String newFile = employeePayRollDirectory + "/" ;
+            Path newFileDirectory = Paths.get(newFile);
+            Files.deleteIfExists(newFileDirectory);
+            Files.createFile(newFileDirectory);
+            FileWriter writer = new FileWriter(String.valueOf(newFileDirectory));
+            for(EmployeePayRollData obj : employeePayRollDataArrayList) {
+                writer.write("Employee ID :" + obj.ID + System.lineSeparator());
+                writer.write("Employee Name :" + obj.name + System.lineSeparator());
+                writer.write("Employee Salary :" + obj.salary + System.lineSeparator());
+                entries = entries + 1;
+            }
+            writer.close();
+        }
+        return entries;
     }
 }
