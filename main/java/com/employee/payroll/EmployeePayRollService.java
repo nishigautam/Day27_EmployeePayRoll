@@ -10,6 +10,11 @@ public class EmployeePayRollService {
         this.employeePayRollDataArrayList = employeePayRollDataArrayList;
     }
 
+    /**
+     * uc1:
+     * created a read employee data method from console
+     * @param inputFromConsole
+     */
     public void readEmployeeData(Scanner inputFromConsole) {
         System.out.println("Enter Name of the Employee :");
         String name = inputFromConsole.nextLine();
@@ -20,10 +25,17 @@ public class EmployeePayRollService {
         employeePayRollDataArrayList.add(new EmployeePayRollData(name, salary, ID));
     }
 
+    /**
+     * created a write employee data method to console
+     */
     private void writeEmployeeData() {
         System.out.println("Employee Data are :" + employeePayRollDataArrayList);
     }
 
+    /**
+     * main method to read the above two methods
+     * @param args
+     */
     public static void main(String[] args) {
         System.out.println("*** Welcome to Employee Payroll Service ***");
         ArrayList<EmployeePayRollData> employeePayrollList = new ArrayList<>();
