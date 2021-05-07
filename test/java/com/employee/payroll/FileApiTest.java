@@ -41,24 +41,14 @@ public class FileApiTest {
             try {
                 Files.createFile(tempPath);
             } catch (IOException e) {
+                Assertions.assertTrue(Files.exists(tempPath));
             }
-            Assertions.assertTrue(Files.exists(tempPath));
         });
 
-        /**
-         * Implementing Directory
-         * conversion of path object to file object
-         */
-        Path p = Paths.get(testDirectory);
-        File file = p.toFile();
-        File[] fileList = file.listFiles();
-        for (File f : fileList) {
-            System.out.println(f);
-        }
-
-        Files.list(Path.of(testDirectory)).filter(Files::isRegularFile).forEach(System.out::println);
-        Files.newDirectoryStream(Path.of(testDirectory)).forEach(System.out::println);
-        Files.newDirectoryStream(Path.of(testDirectory), pathOne -> pathOne.toFile().isFile() && pathOne.toString().startsWith("Temp")).forEach(System.out::println);
+        Files.list(newDirectoryPath).filter(Files::isRegularFile).forEach(System.out::println);
+        Files.newDirectoryStream(newDirectoryPath).forEach(System.out::println);
+        Files.newDirectoryStream(newDirectoryPath, pathOne -> pathOne.toFile().isFile() &&
+                pathOne.toString().startsWith("Temp")).forEach(System.out::println);
     }
 
     @Test

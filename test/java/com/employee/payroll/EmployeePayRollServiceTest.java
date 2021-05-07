@@ -8,6 +8,7 @@ import java.util.Arrays;
 
 public class EmployeePayRollServiceTest {
 
+    public static EmployeePayRollService employeePayRollService;
     @Test
     public void givenEntriesShouldReturnMatchedEntriesSentToFile() throws IOException {
         EmployeePayRollData[] arrOfEmployees = {
@@ -19,6 +20,12 @@ public class EmployeePayRollServiceTest {
         employeePayRollService = new EmployeePayRollService(Arrays.asList(arrOfEmployees));
         employeePayRollService.writeEmployeeData(EmployeePayRollService.IOService.FILE_IO);
         employeePayRollService.printData(EmployeePayRollService.IOService.FILE_IO);
+        long entries = employeePayRollService.countEntries(EmployeePayRollService.IOService.FILE_IO);
+        Assertions.assertEquals(3, entries);
+    }
+    @Test
+    public void givenFileReadingFromConsoleReturnEmployeeCount() {
+        employeePayRollService.readEmployeeData(EmployeePayRollService.IOService.FILE_IO);
         long entries = employeePayRollService.countEntries(EmployeePayRollService.IOService.FILE_IO);
         Assertions.assertEquals(3, entries);
     }
