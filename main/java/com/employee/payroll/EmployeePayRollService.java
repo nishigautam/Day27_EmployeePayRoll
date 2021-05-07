@@ -7,13 +7,17 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
 public class EmployeePayRollService {
-    private ArrayList<EmployeePayRollData> employeePayRollDataArrayList;
 
-    public EmployeePayRollService(ArrayList<EmployeePayRollData> employeePayRollDataArrayList) {
-        this.employeePayRollDataArrayList = employeePayRollDataArrayList;
+    public enum IOService{CONSOLE_IO,FILE_IO,DB_IO,REST_IO}
+
+    List<EmployeePayRollData> employeePayRollList;
+
+    public EmployeePayRollService(List<EmployeePayRollData> employeePayRollData) {
+        this.employeePayRollList = employeePayRollList;
     }
 
     /**
@@ -28,14 +32,25 @@ public class EmployeePayRollService {
         double salary = inputFromConsole.nextDouble();
         System.out.println("Enter Employee ID :");
         int ID = inputFromConsole.nextInt();
-        employeePayRollDataArrayList.add(new EmployeePayRollData(name, salary, ID));
+        employeePayRollList.add(new EmployeePayRollData(name, salary, ID));
     }
 
     /**
      * created a write employee data method to console
+     * @param fileIo
      */
-    void writeEmployeeData() {
-        System.out.println("Employee Data are :" + employeePayRollDataArrayList);
+    void writeEmployeeData(IOService fileIo) {
+        System.out.println("Employee Data are :" + employeePayRollList);
+    }
+
+    public void readEmployeePayRollData(Scanner inputFromConsole) {
+        System.out.println("Enter Employee Id:");
+        int ID = inputFromConsole.nextInt();
+        System.out.println("Enter Employee Name:");
+        String name = inputFromConsole.next();
+        System.out.println("Enter Employee Salary :");
+        double salary = inputFromConsole.nextDouble();
+        employeePayRollList.add(new EmployeePayRollData(name, salary, ID));
     }
 
     /**
@@ -48,28 +63,20 @@ public class EmployeePayRollService {
         EmployeePayRollService employeePayRollService = new EmployeePayRollService(employeePayrollList);
         Scanner inputFromConsole = new Scanner(System.in);
         employeePayRollService.readEmployeeData(inputFromConsole);
-        employeePayRollService.writeEmployeeData();
+        employeePayRollService.writeEmployeeData(IOService.FILE_IO);
     }
 
-    public int writeEmployeeDetailTofFile() throws IOException {
-        int entries = 0;
-        Path employeePayRollDirectory = Paths.get("testDirectory");
-        File fileObj = employeePayRollDirectory.toFile();
-        File[] listOfFiles = fileObj.listFiles();
-        if(Files.isDirectory(employeePayRollDirectory)) {
-            String newFile = employeePayRollDirectory + "/" ;
-            Path newFileDirectory = Paths.get(newFile);
-            Files.deleteIfExists(newFileDirectory);
-            Files.createFile(newFileDirectory);
-            FileWriter writer = new FileWriter(String.valueOf(newFileDirectory));
-            for(EmployeePayRollData obj : employeePayRollDataArrayList) {
-                writer.write("Employee ID :" + obj.ID + System.lineSeparator());
-                writer.write("Employee Name :" + obj.name + System.lineSeparator());
-                writer.write("Employee Salary :" + obj.salary + System.lineSeparator());
-                entries = entries + 1;
-            }
-            writer.close();
+    public long countEntries(IOService fileIo) {
+        long entries = 0;
+        if(fileIo.equals(IOService.FILE_IO)) {
+            entries = new EmployeePayRollFileIOService().countEntries();
         }
         return entries;
+    }
+
+    public void printData(IOService fileIo) {
+        if(fileIo.equals(IOService.FILE_IO)) {
+            new EmployeePayRollFileIOService().printData();
+        }
     }
 }

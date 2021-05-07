@@ -22,7 +22,7 @@ public class FileApiTest {
         /**
          * if the directory already exists then delete method
          */
-        Path newDirectoryPath = Paths.get(testDirectory);
+        Path newDirectoryPath = Paths.get(Home + "/" + testDirectory);
         if(Files.exists(newDirectoryPath)) FilesUtility.deleteFiles(newDirectoryPath.toFile());
         Assertions.assertTrue(Files.notExists(newDirectoryPath));
 
@@ -59,5 +59,12 @@ public class FileApiTest {
         Files.list(Path.of(testDirectory)).filter(Files::isRegularFile).forEach(System.out::println);
         Files.newDirectoryStream(Path.of(testDirectory)).forEach(System.out::println);
         Files.newDirectoryStream(Path.of(testDirectory), pathOne -> pathOne.toFile().isFile() && pathOne.toString().startsWith("Temp")).forEach(System.out::println);
+    }
+
+    @Test
+    public void givenDirectoryWhenWatchedListsAllTheActivities() throws IOException {
+        Path dir = Paths.get(Home + "/" + testDirectory);
+        Files.list(dir).filter(Files::isRegularFile).forEach(System.out::println);
+        new WatchService(dir).processEvents();
     }
 }
